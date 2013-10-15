@@ -12,7 +12,7 @@ io.set('log level', 2);
 
 var F1_USER = "a6042332@drdrb.com",
     F1_PASS = "zb2MDAqYBwYPNbg9",
-    F1_KEYFRAME = __dirname + "/fixtures/2013-japan-suzuka/keyframe_00030.bin";
+    F1_KEYFRAME = __dirname + "/fixtures/2013-japan-suzuka/keyframe_00005.bin";
 
 io.sockets.on('connection', function (socket) {
 

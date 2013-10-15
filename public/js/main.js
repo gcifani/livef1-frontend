@@ -34,6 +34,11 @@ socket.on('packet', function (data) {
         }
     }
 
+    // live timing
+    if (data.carId) {
+        
+    }
+
     // copyright
     if (data.copyright) {
         console.log(data.copyright);
