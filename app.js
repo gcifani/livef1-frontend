@@ -12,13 +12,13 @@ io.set('log level', 2);
 
 var F1_USER = "a6042332@drdrb.com",
     F1_PASS = "zb2MDAqYBwYPNbg9",
-    F1_KEYFRAME = __dirname + "/2013-japan-suzuka/keyframe_00030.bin";
+    F1_KEYFRAME = __dirname + "/fixtures/2013-japan-suzuka/keyframe_00030.bin";
 
 io.sockets.on('connection', function (socket) {
 
-    livef1(F1_USER, F1_PASS, F1_KEYFRAME, function(packet){
+    livef1(F1_USER, F1_PASS, function(packet){
         socket.emit('packet', packet);
-    }).then(function(result){
+    }, F1_KEYFRAME).then(function(result){
         console.log('   \033[33mf1lt  -\033[39m', result);
     }, function(err){
         console.error('   \033[31mf1lt  -\033[39m', err);

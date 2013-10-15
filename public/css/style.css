@@ -23,7 +23,7 @@ h2 {
     padding: 15px;
 }
 #commentBox {
-    display: none;
+    /*display: none;*/
     margin-top: 20px;
     background-color: #f5f5f5;
     width: 255px;
