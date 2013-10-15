@@ -1,4 +1,4 @@
-var livef1 = require('livef1')
+var livef1  = require('./lib/livef1')
   , connect = require('connect')
   ;
 
