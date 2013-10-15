@@ -1,0 +1,10 @@
+{
+  "name": "f1lt-js",
+  "description": "Formula 1 live timing frontend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "connect": "~2.9",
+    "socket.io": "~0.9"
+  }
+}
