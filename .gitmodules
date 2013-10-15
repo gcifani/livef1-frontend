@@ -1,0 +1,3 @@
+[submodule "lib/livef1"]
+	path = lib/livef1
+	url = git@github.com:iharosi/livef1.git
