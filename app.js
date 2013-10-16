@@ -16,7 +16,7 @@ var io = require('socket.io').listen(app);
 
 var F1_USER = "a6042332@drdrb.com"
   , F1_PASS = "zb2MDAqYBwYPNbg9"
-  , F1_KEYFRAME = false ? __dirname + "/fixtures/2013-japan-suzuka/keyframe_00005.bin" : "live"
+  , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-japan-suzuka/keyframe_00005.bin" : "live"
   ;
 
 io.sockets.on('connection', function (socket) {

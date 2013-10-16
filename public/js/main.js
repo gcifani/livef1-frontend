@@ -8,9 +8,26 @@ var commentary = {
     bit: false,
     first: false
 }
-var carsArr = {};
-var liveTimingTable = "";
 
+var addRow = function(carId) {
+    var element = livetiming.querySelector("tr.carId-"+carId);
+    if (element == null) {
+        var tr = document.createElement("tr"),
+            td;
+        for (var i=1; i<14; i++) {
+            td = document.createElement("td");
+            tr.appendChild(td);
+        }
+        livetiming.appendChild(tr);
+        return element;
+    }
+}
+addRow(13);
+
+var positionUpdate = function(carId, posId) {
+    return true;
+}
+exit;
 socket.on('packet', function (data) {
 
     // notice
@@ -38,62 +55,56 @@ socket.on('packet', function (data) {
 
     // live timing datas
     if (data.carId && data.carId >= 0) {
-        if (!(data.carId in carsArr)) {
-            carsArr[data.carId] = [];
-        }
         switch (Object.keys(data)[0]) {
             case 'history':
-                carsArr[data.carId][0] = data.history[0];
+                console.log( livetiming.querySelector("tr>td:nth-child(3)") );
+                // .innerHTML = data.history[0];
                 break;
-            case 'positionUpdate':
-                carsArr[data.carId][0] = data.positionUpdate;
-                break;
-            case 'position':
-                carsArr[data.carId][0] = data.position;
-                break;
-            case 'number':
-                carsArr[data.carId][1] = data.number;
-                break;
-            case 'driver':
-                carsArr[data.carId][2] = data.driver;
-                break;
-            case 'gap':
-                carsArr[data.carId][3] = data.gap;
-                break;
-            case 'interval':
-                carsArr[data.carId][4] = data.interval;
-                break;
-            case 'lapTime':
-                carsArr[data.carId][5] = data.lapTime;
-                break;
-            case 'sector1':
-                carsArr[data.carId][6] = data.sector1;
-                break;
-            case 'pitlap1':
-                carsArr[data.carId][7] = data.pitlap1;
-                break;
-            case 'sector2':
-                carsArr[data.carId][8] = data.sector2;
-                break;
-            case 'pitlap2':
-                carsArr[data.carId][9] = data.pitlap2;
-                break;
-            case 'sector3':
-                carsArr[data.carId][10] = data.sector3;
-                break;
-            case 'pitlap3':
-                carsArr[data.carId][11] = data.pitlap3;
-                break;
-            case 'numPits':
-                carsArr[data.carId][12] = data.numPits;
-                break;
+            // case 'positionUpdate':
+            //     carsArr[data.carId][0] = data.positionUpdate;
+            //     break;
+            // case 'position':
+            //     carsArr[data.carId][0] = data.position;
+            //     break;
+            // case 'number':
+            //     carsArr[data.carId][1] = data.number;
+            //     break;
+            // case 'driver':
+            //     carsArr[data.carId][2] = data.driver;
+            //     break;
+            // case 'gap':
+            //     carsArr[data.carId][3] = data.gap;
+            //     break;
+            // case 'interval':
+            //     carsArr[data.carId][4] = data.interval;
+            //     break;
+            // case 'lapTime':
+            //     carsArr[data.carId][5] = data.lapTime;
+            //     break;
+            // case 'sector1':
+            //     carsArr[data.carId][6] = data.sector1;
+            //     break;
+            // case 'pitlap1':
+            //     carsArr[data.carId][7] = data.pitlap1;
+            //     break;
+            // case 'sector2':
+            //     carsArr[data.carId][8] = data.sector2;
+            //     break;
+            // case 'pitlap2':
+            //     carsArr[data.carId][9] = data.pitlap2;
+            //     break;
+            // case 'sector3':
+            //     carsArr[data.carId][10] = data.sector3;
+            //     break;
+            // case 'pitlap3':
+            //     carsArr[data.carId][11] = data.pitlap3;
+            //     break;
+            // case 'numPits':
+            //     carsArr[data.carId][12] = data.numPits;
+            //     break;
         }
-        for (var i in carsArr) {
-            carsArr[i].forEach(function(value, index){
-                // console.log(value);
-            });
-        }
-        
+
+        // console.log(data);
     }
 
     // copyright
@@ -122,6 +133,6 @@ socket.on('packet', function (data) {
         commentary.bit = false;
     }
 
-    console.log(data);
+    // console.log(data);
 
 });
