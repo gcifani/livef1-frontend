@@ -48,7 +48,7 @@ h2 {
     background-color: black;
     color: white;
     width: 625px;
-    min-height: 625px;
+    min-height: 630px;
     padding: 15px;
 }
 #livetiming th { padding-bottom: 10px; }
@@ -75,7 +75,7 @@ h2 {
     display: inline-block;
     background-color: #f5f5f5;
     width: 300px;
-    height: 625px;
+    height: 630px;
     border: solid 15px #f5f5f5;
     border-right-width: 5px;
     padding-right: 15px;
@@ -102,10 +102,10 @@ h2 {
     }
     &>span {
         display: inline-block;
-        background-color: rgba(0,0,0,.5);
+        background-color: rgba(255,255,255,.7);
         padding: 10px 20px;
         border-radius: 5px;
-        color: rgba(255,255,255,.5);
+        color: rgba(0,0,0,.8);
         font-family: arial;
         font-size: 13px;
     }

@@ -49,12 +49,20 @@ var removeRow = function(id) {
     return removeNode;
 };
 
-var updateRows = function(carId, posId) {
-    var elements = livetiming.querySelectorAll("tr");
-    Array.prototype.forEach.call(elements, function(i) {
-        // console.log(i);
-        // replacedNode = livetiming.replaceChild(newChild, oldChild);
+var updateRows = function() {
+    var elements = livetiming.querySelectorAll("tr"),
+        store = [];
+    Array.prototype.forEach.call(elements, function(row) {
+        var sortnr = parseFloat(row.cells[0].textContent || row.cells[0].innerText);
+        if(!isNaN(sortnr)) store.push([sortnr, row]);
     });
+    store.sort(function(x, y) {
+        return x[0] - y[0];
+    });
+    for (var i=0, len=store.length; i<len; i++) {
+        livetiming.appendChild(store[i][1]);
+    }
+    store = null;
 };
 
 socket.on('packet', function (data) {
@@ -85,6 +93,7 @@ socket.on('packet', function (data) {
 
     // live timing datas
     if (data.carId && data.carId > 0) {
+        console.log(data);
         var dataTypes = {
             "history": 1,
             "positionUpdate": 1,
@@ -109,7 +118,6 @@ socket.on('packet', function (data) {
                     addOrUpdateRow(data.carId, dataTypes[dataTypeName], data.history[0]);
                     break;
                 case 'positionUpdate':
-                    console.log(data[dataTypeName]);
                     addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
                     updateRows(data.carId, data[dataTypeName]);
                     break;
