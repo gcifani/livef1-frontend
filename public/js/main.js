@@ -2,32 +2,61 @@ var commentBox = document.querySelector("#commentBox"),
     eventTitle = document.querySelector("#eventTitle"),
     splash     = document.querySelector("#splash"),
     livetiming = document.querySelector("#livetiming>tbody");
+var io = io || {},
+    console = console || {};
 var socket = io.connect('http://192.168.110.220:3000');
 var commentary = {
     texts: [],
     bit: false,
     first: false
-}
+};
 
-var addRow = function(carId) {
-    var element = livetiming.querySelector("tr.carId-"+carId);
-    if (element == null) {
+var isRow = function(id) {
+    if (id > 0) {
+        var element = livetiming.querySelector("tr.carId-"+id);
+        if (element !== null) {
+            return livetiming.querySelector("tr.carId-"+id);
+        }
+    }
+    return false;
+};
+
+var addOrUpdateRow = function(id, cell, data) {
+    if (isRow(id) === false) {
         var tr = document.createElement("tr"),
-            td;
+            td, content;
         for (var i=1; i<14; i++) {
             td = document.createElement("td");
+            if (cell > 0 && i == cell) {
+                content = document.createTextNode(data);
+                td.appendChild(content);
+            }
             tr.appendChild(td);
         }
+        tr.classList.add("carId-" + id);
         livetiming.appendChild(tr);
-        return element;
+    } else if (id > 0 && cell > 0) {
+        livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + cell + ")").innerHTML = data;
     }
-}
-addRow(13);
+};
 
-var positionUpdate = function(carId, posId) {
-    return true;
-}
-exit;
+var removeRow = function(id) {
+    var element = isRow(id),
+        removeNode = false;
+    if (element !== false) {
+        var removedNode = livetiming.removeChild(element);
+    }
+    return removeNode;
+};
+
+var updateRows = function(carId, posId) {
+    var elements = livetiming.querySelectorAll("tr");
+    Array.prototype.forEach.call(elements, function(i) {
+        // console.log(i);
+        // replacedNode = livetiming.replaceChild(newChild, oldChild);
+    });
+};
+
 socket.on('packet', function (data) {
 
     // notice
@@ -54,57 +83,42 @@ socket.on('packet', function (data) {
     }
 
     // live timing datas
-    if (data.carId && data.carId >= 0) {
-        switch (Object.keys(data)[0]) {
-            case 'history':
-                console.log( livetiming.querySelector("tr>td:nth-child(3)") );
-                // .innerHTML = data.history[0];
-                break;
-            // case 'positionUpdate':
-            //     carsArr[data.carId][0] = data.positionUpdate;
-            //     break;
-            // case 'position':
-            //     carsArr[data.carId][0] = data.position;
-            //     break;
-            // case 'number':
-            //     carsArr[data.carId][1] = data.number;
-            //     break;
-            // case 'driver':
-            //     carsArr[data.carId][2] = data.driver;
-            //     break;
-            // case 'gap':
-            //     carsArr[data.carId][3] = data.gap;
-            //     break;
-            // case 'interval':
-            //     carsArr[data.carId][4] = data.interval;
-            //     break;
-            // case 'lapTime':
-            //     carsArr[data.carId][5] = data.lapTime;
-            //     break;
-            // case 'sector1':
-            //     carsArr[data.carId][6] = data.sector1;
-            //     break;
-            // case 'pitlap1':
-            //     carsArr[data.carId][7] = data.pitlap1;
-            //     break;
-            // case 'sector2':
-            //     carsArr[data.carId][8] = data.sector2;
-            //     break;
-            // case 'pitlap2':
-            //     carsArr[data.carId][9] = data.pitlap2;
-            //     break;
-            // case 'sector3':
-            //     carsArr[data.carId][10] = data.sector3;
-            //     break;
-            // case 'pitlap3':
-            //     carsArr[data.carId][11] = data.pitlap3;
-            //     break;
-            // case 'numPits':
-            //     carsArr[data.carId][12] = data.numPits;
-            //     break;
+    if (data.carId && data.carId > 0) {
+        var dataTypes = {
+            "history": 1,
+            "positionUpdate": 1,
+            "position": 1,
+            "number": 2,
+            "driver": 3,
+            "gap": 4,
+            "interval": 5,
+            "lapTime": 6,
+            "sector1": 7,
+            "pitlap1": 8,
+            "sector2": 9,
+            "pitlap2": 10,
+            "sector3": 11,
+            "pitlap3": 12,
+            "numPits": 13
+        };
+        var dataTypeName = Object.keys(data)[0];
+        if (dataTypes[dataTypeName] > 0) {
+            switch (dataTypeName) {
+                case 'history':
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data.history[0]);
+                    break;
+                case 'positionUpdate':
+                    console.log(data[dataTypeName]);
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                    updateRows(data.carId, data[dataTypeName]);
+                    break;
+                default:
+                    if (data[dataTypeName] != 0) {
+                        addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                    }
+                    break;
+            }
         }
-
-        // console.log(data);
     }
 
     // copyright
