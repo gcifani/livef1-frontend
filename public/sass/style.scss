@@ -20,6 +20,11 @@
     -webkit-text-size-adjust: none;     /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;          /* prevent copy paste, to allow, change 'none' to 'text' */
 }
+.white  { color: #ffffff; }
+.green  { color: #00ff00; }
+.purple { color: #ff00ff; }
+.yellow { color: #ffff00; }
+
 body {
     margin: 0;
     padding: 0;
@@ -51,13 +56,13 @@ h2 {
     min-height: 630px;
     padding: 15px;
 }
-#livetiming th { padding-bottom: 10px; }
+#livetiming th { padding-bottom: 10px; color: #ccc !important; }
 #livetiming th, #livetiming td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipse;
 }
-#livetiming>*>tr>*:nth-child(1)  { width:  30px; text-align: right; padding-right: 10px; }
+#livetiming>*>tr>*:nth-child(1)  { width:  30px; text-align: right; padding-right: 10px; color: #00ffff; }
 #livetiming>*>tr>*:nth-child(2)  { width:  25px; text-align: right; padding-right:  5px; }
 #livetiming>*>tr>*:nth-child(3)  { width: 145px; }
 #livetiming>*>tr>*:nth-child(4)  { width:  35px; text-align: right; padding-right: 10px; }

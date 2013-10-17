@@ -10,6 +10,12 @@ var commentary = {
     bit: false,
     first: false
 };
+var colors = {
+    1: "white",
+    3: "green",
+    4: "purple",
+    6: "yellow"
+}
 
 var isRow = function(id) {
     if (id > 0) {
@@ -21,22 +27,33 @@ var isRow = function(id) {
     return false;
 };
 
-var addOrUpdateRow = function(id, cell, data) {
+var addOrUpdateRow = function(id, column, data, extra) {
     if (isRow(id) === false) {
         var tr = document.createElement("tr"),
             td, content;
         for (var i=1; i<14; i++) {
             td = document.createElement("td");
-            if (cell > 0 && i == cell) {
-                content = document.createTextNode(data);
-                td.appendChild(content);
+            if (column > 0 && i == column) {
+                if (extra > 0) {
+                    console.log("color: ", extra);
+                    td.innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
+                } else {
+                    td.innerHTML = data;
+                }
+                // content = document.createTextNode(data);
+                // td.appendChild(content);
             }
             tr.appendChild(td);
         }
         tr.classList.add("carId-" + id);
         livetiming.appendChild(tr);
-    } else if (id > 0 && cell > 0) {
-        livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + cell + ")").innerHTML = data;
+    } else if (id > 0 && column > 0) {
+        if (extra > 0) {
+            console.log("color: ", extra);
+            livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
+        } else {
+            livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = data;
+        }
     }
 };
 
@@ -49,7 +66,7 @@ var removeRow = function(id) {
     return removeNode;
 };
 
-var updateRows = function() {
+var sortRows = function() {
     var elements = livetiming.querySelectorAll("tr"),
         store = [];
     Array.prototype.forEach.call(elements, function(row) {
@@ -79,21 +96,20 @@ socket.on('packet', function (data) {
         console.clear();
         livetiming.innerHTML = "";
         switch (data.eventType) {
-            case 1:
-                eventTitle.innerHTML = "Race";
-                break;
-            case 2:
-                eventTitle.innerHTML = "Practice";
-                break;
-            case 3:
-                eventTitle.innerHTML = "Qualifying";
-                break;
+        case 1:
+            eventTitle.innerHTML = "Race";
+            break;
+        case 2:
+            eventTitle.innerHTML = "Practice";
+            break;
+        case 3:
+            eventTitle.innerHTML = "Qualifying";
+            break;
         }
     }
 
     // live timing datas
     if (data.carId && data.carId > 0) {
-        console.log(data);
         var dataTypes = {
             "history": 1,
             "positionUpdate": 1,
@@ -114,18 +130,18 @@ socket.on('packet', function (data) {
         var dataTypeName = Object.keys(data)[0];
         if (dataTypes[dataTypeName] > 0) {
             switch (dataTypeName) {
-                case 'history':
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data.history[0]);
-                    break;
-                case 'positionUpdate':
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                    updateRows(data.carId, data[dataTypeName]);
-                    break;
-                default:
-                    if (data[dataTypeName] != 0) {
-                        addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                    }
-                    break;
+            case 'history':
+                addOrUpdateRow(data.carId, dataTypes[dataTypeName], data.history[0]);
+                break;
+            case 'positionUpdate':
+                addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                sortRows(data.carId, data[dataTypeName]);
+                break;
+            default:
+                if (data[dataTypeName] != 0) {
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName], data.extra);
+                }
+                break;
             }
         }
     }
@@ -156,6 +172,6 @@ socket.on('packet', function (data) {
         commentary.bit = false;
     }
 
-    // console.log(data);
+    // if (data.extra) console.log(data);
 
 });
