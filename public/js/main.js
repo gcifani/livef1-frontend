@@ -69,6 +69,7 @@ socket.on('packet', function (data) {
     if (data.startSession) {
         commentBox.innerHTML = "";
         console.clear();
+        livetiming.innerHTML = "";
         switch (data.eventType) {
             case 1:
                 eventTitle.innerHTML = "Race";
