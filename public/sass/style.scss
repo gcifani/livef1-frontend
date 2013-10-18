@@ -1,6 +1,25 @@
 @import "compass/css3";
 @import "compass/reset";
 
+@mixin flexbox() {
+    display: -webkit-box;   /* OLD: Safari,  iOS, Android browser, older WebKit browsers.  */
+    display: -moz-box;      /* OLD: Firefox (buggy) */ 
+    display: -ms-flexbox;   /* MID: IE 10 */
+    display: -webkit-flex;  /* NEW, Chrome 21+ */
+    display: flex;          /* NEW: Opera 12.1, Firefox 22+ */
+}
+@mixin align-items($align) {
+    -webkit-box-align: $align; -moz-box-align: $align;
+    -ms-flex-align: $align;
+    -webkit-align-items: $align;
+    align-items: $align;
+}
+@mixin justify-content($align) {
+    -webkit-box-pack: $align; -moz-box-pack: $align; 
+    -ms-flex-pack: $align; 
+    -webkit-justify-content: $align;
+    justify-content: $align;
+}
 @mixin keyframes($name) {
     @-webkit-keyframes $name { @content; }
     @-moz-keyframes $name { @content; }
@@ -29,6 +48,7 @@ body {
     margin: 0;
     padding: 0;
     font: 13px/1.6em optima, arial, sans-serif;
+    color: #222;
 }
 h1, h2 {
     margin: 0;
@@ -47,7 +67,12 @@ h2 {
     font-size: 24px;
     color: #bbb;
 }
-#wrapper { padding: 15px; }
+#wrapper {
+    position: relative;
+    z-index: 1;
+    // -webkit-filter: blur(8px) contrast(0.4) brightness(1.4);
+    // -webkit-transform: translate3d(0,0,0);
+}
 #timingBox {
     display: inline-block;
     background-color: black;
@@ -62,6 +87,7 @@ h2 {
     overflow: hidden;
     text-overflow: ellipse;
 }
+#livetiming>tbody>tr>td.hidden { visibility: hidden; }
 #livetiming>*>tr>*:nth-child(1)  { width:  30px; text-align: right; padding-right: 10px; color: #00ffff; }
 #livetiming>*>tr>*:nth-child(2)  { width:  25px; text-align: right; padding-right:  5px; }
 #livetiming>*>tr>*:nth-child(3)  { width: 145px; }
@@ -94,23 +120,23 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,.7);
+    background-color: rgba(100,100,100,.9);
     z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flexbox();
+    @include align-items(center);
+    @include justify-content(center);
     @include animation(show .3s ease);
     &.hidden {
         opacity: 0;
         height: 0;
-        @include animation(hide 1s ease);
+        @include animation(hide .6s ease);
     }
     &>span {
         display: inline-block;
-        background-color: rgba(255,255,255,.7);
+        background-color: rgba(200,200,200,.9);
+        color: #222;
         padding: 10px 20px;
         border-radius: 5px;
-        color: rgba(0,0,0,.8);
         font-family: arial;
         font-size: 13px;
     }
@@ -123,4 +149,21 @@ h2 {
 @include keyframes(show) {
     0%   { opacity: 0; height: 100%; }
     100% { opacity: 1; height: 100%; }
+}
+
+/* Portrait */
+@media screen and (orientation:portrait) {
+    /* Portrait styles */
+    #splash {
+        width: 100%;
+        height: 100%;
+    }
+}
+/* Landscape */
+@media screen and (orientation:landscape) {
+    /* Landscape styles */
+    #splash {
+        width: 100%;
+        height: 100%;
+    }
 }

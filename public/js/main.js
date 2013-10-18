@@ -35,13 +35,10 @@ var addOrUpdateRow = function(id, column, data, extra) {
             td = document.createElement("td");
             if (column > 0 && i == column) {
                 if (extra > 0) {
-                    console.log("color: ", extra);
                     td.innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
                 } else {
                     td.innerHTML = data;
                 }
-                // content = document.createTextNode(data);
-                // td.appendChild(content);
             }
             tr.appendChild(td);
         }
@@ -49,7 +46,6 @@ var addOrUpdateRow = function(id, column, data, extra) {
         livetiming.appendChild(tr);
     } else if (id > 0 && column > 0) {
         if (extra > 0) {
-            console.log("color: ", extra);
             livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
         } else {
             livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = data;
@@ -136,6 +132,24 @@ socket.on('packet', function (data) {
             case 'positionUpdate':
                 addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
                 sortRows(data.carId, data[dataTypeName]);
+                break;
+            case 'lapTime':
+                if (data[dataTypeName] == "RETIRED") {
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                    livetiming.querySelector("tr.carId-" + data.carId + " > td:nth-child(1)").classList.add("hidden");
+                } else if (data[dataTypeName] != 0) {
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                }
+                break;
+            case 'sector1':
+            case 'sector2':
+            case 'sector3':
+                if (data[dataTypeName] == "STOP") {
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                    livetiming.querySelector("tr.carId-" + data.carId + " > td:nth-child(1)").classList.add("hidden");
+                } else if (data[dataTypeName] != 0) {
+                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+                }
                 break;
             default:
                 if (data[dataTypeName] != 0) {
