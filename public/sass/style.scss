@@ -39,6 +39,7 @@
     -webkit-text-size-adjust: none;     /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;          /* prevent copy paste, to allow, change 'none' to 'text' */
 }
+.aqua   { color: #00ffff; }
 .white  { color: #ffffff; }
 .green  { color: #00ff00; }
 .purple { color: #ff00ff; }
@@ -87,7 +88,7 @@ h2 {
     overflow: hidden;
     text-overflow: ellipse;
 }
-#livetiming>tbody>tr>td.hidden { visibility: hidden; }
+#livetiming>tbody>tr>td>span.hidden { visibility: hidden; }
 #livetiming>*>tr>*:nth-child(1)  { width:  30px; text-align: right; padding-right: 10px; color: #00ffff; }
 #livetiming>*>tr>*:nth-child(2)  { width:  25px; text-align: right; padding-right:  5px; }
 #livetiming>*>tr>*:nth-child(3)  { width: 145px; }
@@ -102,6 +103,13 @@ h2 {
 #livetiming>*>tr>*:nth-child(12) { width:  30px; }
 #livetiming>*>tr>*:nth-child(13) { width:  20px; text-align: center; }
 #livetiming>*>tr>*:nth-child(14) { width:  15px; }
+#livetiming>tfoot>tr>td { text-align: left !important; }
+#livetiming>tfoot>tr:first-child>td { padding-top: 70px; }
+#livetiming>tfoot>tr:last-child>td {
+    font-weight: 100;
+    font-size: 12px;
+    padding-top: 20px;
+}
 #commentBox {
     display: inline-block;
     background-color: #f5f5f5;

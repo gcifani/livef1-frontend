@@ -15,7 +15,7 @@ var colors = {
     3: "green",
     4: "purple",
     6: "yellow"
-}
+};
 
 var isRow = function(id) {
     if (id > 0) {
@@ -30,36 +30,27 @@ var isRow = function(id) {
 var addOrUpdateRow = function(id, column, data, extra) {
     if (isRow(id) === false) {
         var tr = document.createElement("tr"),
-            td, content;
+            td, span;
         for (var i=1; i<14; i++) {
             td = document.createElement("td");
-            if (column > 0 && i == column) {
-                if (extra > 0) {
-                    td.innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
-                } else {
-                    td.innerHTML = data;
-                }
+            span = document.createElement("span");
+            if (i === column) {
+                span.innerHTML = data !== 0 ? data : "";
+            if (extra > 0) { span.classList.add(colors[extra]); }
             }
+            td.appendChild(span);
             tr.appendChild(td);
         }
         tr.classList.add("carId-" + id);
         livetiming.appendChild(tr);
-    } else if (id > 0 && column > 0) {
+    } else {
+        var element = livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")>span");
+        element.innerHTML = data !== "0" ? data : "";
         if (extra > 0) {
-            livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = "<span class=\"" + colors[extra] + "\">" + data + "</span>";
-        } else {
-            livetiming.querySelector("tr.carId-" + id + ">td:nth-child(" + column + ")").innerHTML = data;
+            element.removeAttribute("class");
+            element.classList.add(colors[extra]);
         }
     }
-};
-
-var removeRow = function(id) {
-    var element = isRow(id),
-        removeNode = false;
-    if (element !== false) {
-        var removedNode = livetiming.removeChild(element);
-    }
-    return removeNode;
 };
 
 var sortRows = function() {
@@ -67,7 +58,9 @@ var sortRows = function() {
         store = [];
     Array.prototype.forEach.call(elements, function(row) {
         var sortnr = parseFloat(row.cells[0].textContent || row.cells[0].innerText);
-        if(!isNaN(sortnr)) store.push([sortnr, row]);
+        if (!isNaN(sortnr)) {
+            store.push([sortnr, row]);
+        }
     });
     store.sort(function(x, y) {
         return x[0] - y[0];
@@ -79,6 +72,8 @@ var sortRows = function() {
 };
 
 socket.on('packet', function (data) {
+
+    var packetName = Object.keys(data)[0];
 
     // notice
     if (data.notice) {
@@ -123,41 +118,37 @@ socket.on('packet', function (data) {
             "pitlap3": 12,
             "numPits": 13
         };
-        var dataTypeName = Object.keys(data)[0];
-        if (dataTypes[dataTypeName] > 0) {
-            switch (dataTypeName) {
+        if (dataTypes[packetName] > 0) {
+            switch (packetName) {
             case 'history':
-                addOrUpdateRow(data.carId, dataTypes[dataTypeName], data.history[0]);
+                addOrUpdateRow(data.carId, dataTypes[packetName], data.history[0], data.extra);
                 break;
             case 'positionUpdate':
-                addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                sortRows(data.carId, data[dataTypeName]);
-                break;
-            case 'lapTime':
-                if (data[dataTypeName] == "RETIRED") {
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                    livetiming.querySelector("tr.carId-" + data.carId + " > td:nth-child(1)").classList.add("hidden");
-                } else if (data[dataTypeName] != 0) {
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                }
-                break;
-            case 'sector1':
-            case 'sector2':
-            case 'sector3':
-                if (data[dataTypeName] == "STOP") {
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
-                    livetiming.querySelector("tr.carId-" + data.carId + " > td:nth-child(1)").classList.add("hidden");
-                } else if (data[dataTypeName] != 0) {
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName]);
+            case 'position':
+                if (data[packetName] === 0) {
+                    var element = livetiming.querySelector("tr.carId-" + data.carId + ">td:first-child>span");
+                    element.removeAttribute("class");
+                    element.classList.add("hidden");
+                } else {
+                    addOrUpdateRow(data.carId, dataTypes[packetName], data[packetName], data.extra);
+                    sortRows(data.carId, data[packetName]);
                 }
                 break;
             default:
-                if (data[dataTypeName] != 0) {
-                    addOrUpdateRow(data.carId, dataTypes[dataTypeName], data[dataTypeName], data.extra);
-                }
+                addOrUpdateRow(data.carId, dataTypes[packetName], data[packetName], data.extra);
                 break;
             }
         }
+    }
+
+    // best lap record
+    if (data.fastestLapCar || data.fastestLapDriver || data.fastestLapTime || data.fastestLapLap) {
+        document.querySelector("#" + packetName).innerHTML = data[packetName];
+    }
+
+    // Track status
+    if (data.trackStatus) {
+        // TODO: display track status
     }
 
     // copyright
@@ -186,6 +177,6 @@ socket.on('packet', function (data) {
         commentary.bit = false;
     }
 
-    // if (data.extra) console.log(data);
+    console.log(data);
 
 });
