@@ -177,6 +177,6 @@ socket.on('packet', function (data) {
         commentary.bit = false;
     }
 
-    console.log(data);
+    // console.log(data);
 
 });
