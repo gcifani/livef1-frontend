@@ -6,7 +6,7 @@ var io = io || {},
     console = console || {};
 var socket = io.connect('http://127.0.0.1:3000');
 var commentary = {
-    texts: [],
+    texts: [""],
     linebreak: false
 };
 var colors = {
