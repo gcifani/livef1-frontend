@@ -4,7 +4,7 @@ var commentBox = document.querySelector("#commentBox"),
     livetiming = document.querySelector("#livetiming>tbody");
 var io = io || {},
     console = console || {};
-var socket = io.connect('http://192.168.110.220:3000');
+var socket = io.connect('http://127.0.0.1:3000');
 var commentary = {
     texts: [],
     bit: false,
@@ -111,11 +111,11 @@ socket.on('packet', function (data) {
             "interval": 5,
             "lapTime": 6,
             "sector1": 7,
-            "pitlap1": 8,
+            "pitLap1": 8,
             "sector2": 9,
-            "pitlap2": 10,
+            "pitLap2": 10,
             "sector3": 11,
-            "pitlap3": 12,
+            "pitLap3": 12,
             "numPits": 13
         };
         if (dataTypes[packetName] > 0) {
