@@ -7,8 +7,7 @@ var io = io || {},
 var socket = io.connect('http://127.0.0.1:3000');
 var commentary = {
     texts: [],
-    bit: false,
-    first: false
+    linebreak: false
 };
 var colors = {
     1: "white",
@@ -158,23 +157,15 @@ socket.on('packet', function (data) {
 
     // commentary
     if (data.commentary) {
-        if (!commentary.bit) {
-            commentary.texts.push(data.commentary);
+        if (commentary.linebreak) {
+            commentary.texts.push(data.commentary[1]);
         } else {
             var commentaryBit = commentary.texts.pop();
-            commentary.texts.push(commentaryBit + data.commentary);
+            commentary.texts.push(commentaryBit + data.commentary[1]);
         }
         commentBox.innerHTML = commentary.texts.join("<br><br>");
         commentBox.scrollTop = commentBox.scrollHeight;
-        commentary.bit = true;
-        // first comment
-        if (commentary.first) {
-            splash.classList.add('hidden');
-        } else {
-            commentary.first = true;
-        }
-    } else {
-        commentary.bit = false;
+        commentary.linebreak = data.commentary[0];
     }
 
     // console.log(data);
