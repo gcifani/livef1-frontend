@@ -77,7 +77,7 @@ socket.on('packet', function (data) {
     // notice
     if (data.notice) {
         splash.innerHTML = "<span>" + data.notice + "<span>";
-        splash.classList.remove('hidden');
+        splash.classList.add('hidden');
     }
 
     // prepare the user interface
