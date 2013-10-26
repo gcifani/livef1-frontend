@@ -16,17 +16,19 @@ var io = require('socket.io').listen(app);
 
 var F1_USER = "a6042332@drdrb.com"
   , F1_PASS = "zb2MDAqYBwYPNbg9"
-  , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-japan-suzuka/keyframe_00419.bin" : "live"
+  // , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-india-new-delhi/practice2/keyframe_00382.bin" : "live"
+  , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-japan-suzuka/keyframe_00004.bin" : "live"
   ;
 
 io.sockets.on('connection', function (socket) {
 
     livef1(F1_USER, F1_PASS, function(packet){
-        socket.emit('packet', packet);
+      socket.emit('packet', packet);
     }, F1_KEYFRAME).then(function(result){
-        console.log('   \033[33mf1lt  -\033[39m', result);
+      console.log('   \033[33mf1lt  -\033[39m', result);
     }, function(err){
-        console.error('   \033[31mf1lt  -\033[39m', err);
+      socket.emit('error', err);
+      console.error('   \033[31mf1lt  -\033[39m', err);
     });
 
 });

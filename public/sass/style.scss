@@ -39,6 +39,7 @@
     -webkit-text-size-adjust: none;     /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;          /* prevent copy paste, to allow, change 'none' to 'text' */
 }
+.red    { color: #ff0000; }
 .aqua   { color: #00ffff; }
 .white  { color: #ffffff; }
 .green  { color: #00ff00; }
@@ -82,6 +83,7 @@ h2 {
     min-height: 630px;
     padding: 15px;
 }
+#livetiming.Practice .best_lap { display: none; }
 #livetiming th { padding-bottom: 10px; color: #ccc !important; }
 #livetiming th, #livetiming td {
     white-space: nowrap;
@@ -102,9 +104,8 @@ h2 {
 #livetiming>*>tr>*:nth-child(11) { width:  50px; text-align: right; padding-right: 5px; }
 #livetiming>*>tr>*:nth-child(12) { width:  30px; }
 #livetiming>*>tr>*:nth-child(13) { width:  20px; text-align: center; }
-#livetiming>*>tr>*:nth-child(14) { width:  15px; }
 #livetiming>tfoot>tr>td { text-align: left !important; }
-#livetiming>tfoot>tr:first-child>td { padding-top: 70px; }
+#livetiming>tfoot>tr.best_lap>td, #livetiming>tfoot>tr.session_clock>td { padding-top: 70px; }
 #livetiming>tfoot>tr:last-child>td {
     font-weight: 100;
     font-size: 12px;

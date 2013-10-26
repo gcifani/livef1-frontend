@@ -22,48 +22,32 @@
         </div>
 
         <div id="wrapper">
-            <h1>Live timing</h1>
-            <h2 id="eventTitle"></h2>
             <div id="timingBox">
                 <table id="livetiming">
-                    <thead>
-                        <tr>
-                            <th>P</th>
-                            <th>&nbsp;</th>
-                            <th>Name</th>
-                            <th>Gap</th>
-                            <th>Interval</th>
-                            <th>&nbsp;</th>
-                            <th>Sector 1</th>
-                            <th>&nbsp;</th>
-                            <th>Sector 2</th>
-                            <th>&nbsp;</th>
-                            <th>Sector 3</th>
-                            <th>&nbsp;</th>
-                            <th>Pit</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
+                    <thead></thead>
                     <tbody></tbody>
                     <tfoot>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                        <tr class="best_lap">
+                            <td colspan="2"></td>
                             <td><span class="aqua">BEST LAP:</span></td>
                             <td colspan="3">
-                                <span class="purple" id="fastestLapCar">2</span>
-                                <span class="purple" id="fastestLapDriver">M. Webber</span>
+                                <span class="purple" id="fastestLapCar"></span>
+                                <span class="purple" id="fastestLapDriver"></span>
                             </td>
-                            <td colspan="2"><span class="purple" id="fastestLapTime">1:34.587</span></td>
+                            <td colspan="2"><span class="purple" id="fastestLapTime"></span></td>
                             <td colspan="2"><span class="aqua">ON LAP</span></td>
-                            <td colspan="4"><span class="purple" id="fastestLapLap">44</span></td>
+                            <td colspan="4"><span class="purple" id="fastestLapLap"></span></td>
+                        </tr>
+                        <tr class="session_clock">
+                            <td colspan="5"></td>
+                            <td colspan="3">Session Time Remaining:</td>
+                            <td><span class="yellow">0</span></td>
                         </tr>
                         <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td><span>Track Status:</span><span id="trackStatus"></span></td>
-                            <td colspan="7"><span>&copy; Formula One World ChampionShip Ltd</span></td>
-                            <td colspan="4"><span></span></td>
+                            <td colspan="2"></td>
+                            <td>Track Status:<span id="trackStatus"></span></td>
+                            <td colspan="7">&copy; Formula One World ChampionShip Ltd</td>
+                            <td colspan="4"></td>
                         </tr>
                     </tfoot>
                 </table>
