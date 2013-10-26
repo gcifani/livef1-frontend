@@ -80,10 +80,17 @@ h2 {
 #timingBox {
     display: inline-block;
     background-color: black;
+    background-position: center;
+    background-repeat: no-repeat;
     color: white;
     width: 610px;
     min-height: 630px;
     padding: 15px;
+}
+#livetiming {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black;
 }
 #livetiming.Practice .best_lap { display: none; }
 #livetiming th { padding-bottom: 10px; color: #ccc !important; }

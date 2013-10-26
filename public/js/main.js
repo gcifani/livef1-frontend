@@ -1,11 +1,13 @@
 var commentBox   = document.querySelector("#commentBox"),
-    eventTitle   = document.querySelector("#eventTitle"),
     splash       = document.querySelector("#splash"),
+    timingBox    = document.querySelector("#timingBox"),
     table        = document.querySelector("#livetiming"),
     tableHead    = document.querySelector("#livetiming>thead"),
     tableBody    = document.querySelector("#livetiming>tbody"),
-    bestLap      = document.querySelector("#best_lap"),
-    sessionClock = document.querySelector("#session_clock");
+    // tableFoot    = document.querySelector("#livetiming>tfoot"),
+    // sessionClock = document.querySelector("#session_clock"),
+    bestLap      = document.querySelector("#best_lap");
+    
 var io = io || {},
     console = console || {};
 var socket = io.connect('http://127.0.0.1:3000');
@@ -16,7 +18,7 @@ var commentary = {
 var theEvent = {
     id: 0,
     type: 0
-}
+};
 var colors = {
     1: "white",
     2: "red",
@@ -60,7 +62,7 @@ var createTableHead = function() {
     tableBody.innerHTML = "";
     var tr = document.createElement("tr"),
              th, span;
-    labels[theEvent.type].forEach(function(val, i){
+    labels[theEvent.type].forEach(function(val){
         th = document.createElement("th");
         span = document.createElement("span");
         span.innerHTML = val;
@@ -73,13 +75,14 @@ var createTableHead = function() {
 var addOrUpdateRow = function(id, column, data, extra) {
     if (columns[theEvent.type].indexOf(column)>=0) {
         var element = isRow(id, column);
+        var span;
         if (element === false) {
             var tr = document.createElement("tr"),
-                td, span;
-            columns[theEvent.type].forEach(function(val, i){
+                td;
+            columns[theEvent.type].forEach(function(val){
                 td = document.createElement("td");
                 span = document.createElement("span");
-                if (val == column) {
+                if (val === column) {
                     span.innerHTML = data !== 0 ? data : "";
                     if (extra > 0) { span.classList.add(colors[extra]); }
                 }
@@ -90,7 +93,7 @@ var addOrUpdateRow = function(id, column, data, extra) {
             tr.classList.add("carId-" + id);
             tableBody.appendChild(tr);
         } else {
-            var span = element.querySelector("span");
+            span = element.querySelector("span");
             span.innerHTML = data !== "0" ? data : "";
             if (extra > 0) {
                 span.removeAttribute("class");
@@ -130,7 +133,12 @@ socket.on('packet', function (data) {
 
     // notice
     if (data.notice) {
-        splash.innerHTML = "<span>" + data.notice + "<span>";
+        if (data.notice.indexOf('img:/') >= 0) {
+            timingBox.style.backgroundImage = "url('http://live-timing.formula1.com/" + data.notice.slice(5) + "')";
+        } else {
+            timingBox.backgroundImage = "none";
+            splash.innerHTML = "<span>" + data.notice + "<span>";
+        }
     }
 
     // prepare the user interface
@@ -139,11 +147,13 @@ socket.on('packet', function (data) {
         commentBox.innerHTML = "";
         tableBody.innerHTML = "";
         tableHead.innerHTML = "";
-        theEvent.id = data.sessionId;
-        theEvent.type = data.eventType;
-        table.removeAttribute("class");
-        table.classList.add(events[theEvent.type]);
-        createTableHead(theEvent.type);
+        if (events.hasOwnProperty(data.eventType)) {
+            theEvent.id = data.sessionId;
+            theEvent.type = data.eventType;
+            table.removeAttribute("class");
+            table.classList.add(events[theEvent.type]);
+            createTableHead(theEvent.type);
+        }
         splash.classList.add('hidden');
     }
 
@@ -153,6 +163,7 @@ socket.on('packet', function (data) {
         case 'positionUpdate':
             addOrUpdateRow(data.carId, 'position', data[packetName], data.extra);
             sortRows(data.carId, data[packetName]);
+            break;
         case 'position':
             if (data[packetName] === 0) {
                 var element = tableBody.querySelector("tr.carId-" + data.carId + ">td:first-child>span");
@@ -172,7 +183,7 @@ socket.on('packet', function (data) {
     // best lap record
     if (data.fastestLapCar || data.fastestLapDriver || data.fastestLapTime || data.fastestLapLap) {
         document.querySelector("#" + packetName).innerHTML = data[packetName];
-        if (data.fastestLapTime && data.fastestLapTime == "0") {
+        if (data.fastestLapTime && data.fastestLapTime === "0") {
             bestLap.removeAttribute("class");
             bestLap.classList.add("hidden");
         } else if (data.fastestLapTime) {
