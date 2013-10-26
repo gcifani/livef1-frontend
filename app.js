@@ -17,7 +17,8 @@ var io = require('socket.io').listen(app);
 var F1_USER = "a6042332@drdrb.com"
   , F1_PASS = "zb2MDAqYBwYPNbg9"
   // , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-india-new-delhi/practice2/keyframe_00382.bin" : "live"
-  , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-japan-suzuka/keyframe_00004.bin" : "live"
+  // , F1_KEYFRAME = true ? __dirname + "/fixtures/2013-india-new-delhi/qualifying/keyframe_00002.bin" : "live"
+  , F1_KEYFRAME = "live"
   ;
 
 io.sockets.on('connection', function (socket) {

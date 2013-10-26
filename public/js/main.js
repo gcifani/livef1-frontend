@@ -1,9 +1,11 @@
-var commentBox = document.querySelector("#commentBox"),
-    eventTitle = document.querySelector("#eventTitle"),
-    splash     = document.querySelector("#splash"),
-    table      = document.querySelector("#livetiming"),
-    tableHead  = document.querySelector("#livetiming>thead"),
-    tableBody  = document.querySelector("#livetiming>tbody");
+var commentBox   = document.querySelector("#commentBox"),
+    eventTitle   = document.querySelector("#eventTitle"),
+    splash       = document.querySelector("#splash"),
+    table        = document.querySelector("#livetiming"),
+    tableHead    = document.querySelector("#livetiming>thead"),
+    tableBody    = document.querySelector("#livetiming>tbody"),
+    bestLap      = document.querySelector("#best_lap"),
+    sessionClock = document.querySelector("#session_clock");
 var io = io || {},
     console = console || {};
 var socket = io.connect('http://127.0.0.1:3000');
@@ -128,12 +130,12 @@ socket.on('packet', function (data) {
     // notice
     if (data.notice) {
         splash.innerHTML = "<span>" + data.notice + "<span>";
-        splash.classList.add('hidden');
     }
 
     // prepare the user interface
     if (data.startSession) {
-        console.clear();
+        console.log(data);
+        // console.clear();
         commentBox.innerHTML = "";
         tableBody.innerHTML = "";
         tableHead.innerHTML = "";
@@ -142,6 +144,7 @@ socket.on('packet', function (data) {
         table.removeAttribute("class");
         table.classList.add(events[theEvent.type]);
         createTableHead(theEvent.type);
+        splash.classList.add('hidden');
     }
 
     // live timing datas
@@ -169,6 +172,12 @@ socket.on('packet', function (data) {
     // best lap record
     if (data.fastestLapCar || data.fastestLapDriver || data.fastestLapTime || data.fastestLapLap) {
         document.querySelector("#" + packetName).innerHTML = data[packetName];
+        if (data.fastestLapTime == 0) {
+            bestLap.removeAttribute("class");
+            bestLap.classList.add("hidden");
+        } else {
+            bestLap.removeAttribute("class");
+        }
     }
 
     // Track status
