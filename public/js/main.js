@@ -23,7 +23,8 @@ var colors = {
     3: "green",
     4: "purple",
     5: "blue",
-    6: "yellow"
+    6: "yellow",
+    7: "grey"
 };
 var events = {
     1: 'Race',
@@ -44,8 +45,8 @@ var errorMessages = {
     'EHOSTUNREACH': "Error, host unreachable!"
 };
 
-var isRow = function(id, column, eventType) {
-    if (id > 0 && columns[eventType].indexOf(column) >= 0) {
+var isRow = function(id, column) {
+    if (id > 0 && columns[theEvent.type].indexOf(column) >= 0) {
         var element = tableBody.querySelector("tr.carId-" + id + ">td." + column);
         if (element !== null) {
             return element;
@@ -54,12 +55,12 @@ var isRow = function(id, column, eventType) {
     return false;
 };
 
-var createTableHead = function(eventType) {
+var createTableHead = function() {
     tableHead.innerHTML = "";
     tableBody.innerHTML = "";
     var tr = document.createElement("tr"),
              th, span;
-    labels[eventType].forEach(function(val, i){
+    labels[theEvent.type].forEach(function(val, i){
         th = document.createElement("th");
         span = document.createElement("span");
         span.innerHTML = val;
@@ -69,13 +70,13 @@ var createTableHead = function(eventType) {
     tableHead.appendChild(tr);
 };
 
-var addOrUpdateRow = function(id, eventType, column, data, extra) {
-    if (columns[eventType].indexOf(column)>=0) {
-        var element = isRow(id, column, eventType);
+var addOrUpdateRow = function(id, column, data, extra) {
+    if (columns[theEvent.type].indexOf(column)>=0) {
+        var element = isRow(id, column);
         if (element === false) {
             var tr = document.createElement("tr"),
                 td, span;
-            columns[eventType].forEach(function(val, i){
+            columns[theEvent.type].forEach(function(val, i){
                 td = document.createElement("td");
                 span = document.createElement("span");
                 if (val == column) {
@@ -134,8 +135,7 @@ socket.on('packet', function (data) {
 
     // prepare the user interface
     if (data.startSession) {
-        console.log(data);
-        // console.clear();
+        console.clear();
         commentBox.innerHTML = "";
         tableBody.innerHTML = "";
         tableHead.innerHTML = "";
@@ -151,7 +151,7 @@ socket.on('packet', function (data) {
     if (data.carId && data.carId > 0) {
         switch (packetName) {
         case 'positionUpdate':
-            addOrUpdateRow(data.carId, theEvent.type, 'position', data[packetName], data.extra);
+            addOrUpdateRow(data.carId, 'position', data[packetName], data.extra);
             sortRows(data.carId, data[packetName]);
         case 'position':
             if (data[packetName] === 0) {
@@ -159,12 +159,12 @@ socket.on('packet', function (data) {
                 element.removeAttribute("class");
                 element.classList.add("hidden");
             } else {
-                addOrUpdateRow(data.carId, theEvent.type, packetName, data[packetName], data.extra);
+                addOrUpdateRow(data.carId, packetName, data[packetName], data.extra);
                 sortRows(data.carId, data[packetName]);
             }
             break;
         default:
-            addOrUpdateRow(data.carId, theEvent.type, packetName, data[packetName], data.extra);
+            addOrUpdateRow(data.carId, packetName, data[packetName], data.extra);
             break;
         }
     }
@@ -172,10 +172,10 @@ socket.on('packet', function (data) {
     // best lap record
     if (data.fastestLapCar || data.fastestLapDriver || data.fastestLapTime || data.fastestLapLap) {
         document.querySelector("#" + packetName).innerHTML = data[packetName];
-        if (data.fastestLapTime == 0) {
+        if (data.fastestLapTime && data.fastestLapTime == "0") {
             bestLap.removeAttribute("class");
             bestLap.classList.add("hidden");
-        } else {
+        } else if (data.fastestLapTime) {
             bestLap.removeAttribute("class");
         }
     }

@@ -41,10 +41,12 @@
 }
 .red    { color: #ff0000; }
 .aqua   { color: #00ffff; }
+.grey   { color: #999999; }
 .white  { color: #ffffff; }
 .green  { color: #00ff00; }
 .purple { color: #ff00ff; }
 .yellow { color: #ffff00; }
+.hidden { display: none; }
 
 body {
     margin: 0;
@@ -105,8 +107,8 @@ h2 {
 #livetiming>*>tr>*:nth-child(12) { width:  30px; }
 #livetiming>*>tr>*:nth-child(13) { width:  20px; text-align: center; }
 #livetiming>tfoot>tr>td { text-align: left !important; }
-#livetiming>tfoot>tr.best_lap>td, #livetiming>tfoot>tr.session_clock>td { padding-top: 70px; }
-#livetiming>tfoot>tr:last-child>td {
+#livetiming>tfoot>tr:first-child>*, #livetiming>tfoot>tr.hidden+tr>* { padding-top: 70px; }
+#livetiming>tfoot>tr:last-child>* {
     font-weight: 100;
     font-size: 12px;
     padding-top: 20px;
